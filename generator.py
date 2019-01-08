@@ -56,7 +56,7 @@ class Generator:
             self.word_list.yview('end')
             self.nw_entry.delete(0, 'end')
         else:
-            messagebox.showerror('Nová osemsmerovka', 'Vstup musí obsahovať slovo', parent=self.window)
+            messagebox.showerror('Generátor osemsmeroviek', 'Vstup musí obsahovať slovo', parent=self.window)
 
     def delete_selected(self):
         try:
