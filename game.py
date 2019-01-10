@@ -20,6 +20,7 @@ class CrosswordsGame:
         self.canvas = tkinter.Canvas(self.main_window, height=360, width=720)
         self.canvas.pack(side='bottom')
         self.canvas.bind('<Button-1>', self.select)
+        self.canvas.bind('<Button-3>', lambda e: self.end_selection((-1, -1)))
         # HELP BUTTON
         tkinter.Button(self.main_window, text='? (F1)', command=self.show_help).pack(side='right', anchor='ne')
         self.main_window.bind('<F1>', lambda e: self.show_help())
@@ -27,9 +28,9 @@ class CrosswordsGame:
         tkinter.Button(self.main_window, text='Nová hra (N)', command=self.new_game).pack(side='left', anchor='nw')
         self.main_window.bind('<n>', lambda e: self.new_game())
         # CW MANAGER BUTTON
-        tkinter.Button(self.main_window, text='Moje osemsmerovky (M)', command=lambda: CWManager.show()).pack(
+        tkinter.Button(self.main_window, text='Moje osemsmerovky (M)', command=lambda: CWManager.show(self)).pack(
             side='right', anchor='nw')
-        self.main_window.bind('<m>', lambda e: CWManager.show())
+        self.main_window.bind('<m>', lambda e: CWManager.show(self))
         # COORDINATES TOGGLE
         self.main_window.bind('<c>', lambda e: self.toggle_coordinates())
 

@@ -8,9 +8,10 @@ class CWManager:
     cw_list = None
     h_entry = None
     w_entry = None
+    game = None
 
     @staticmethod
-    def show():
+    def show(game):
         try:
             CWManager.window.lift()
             CWManager.window.focus_force()
@@ -24,9 +25,10 @@ class CWManager:
             # USER CREATED CROSSWORD LIST
             CWManager.cw_list = tkinter.Listbox(CWManager.window, width=50)
             CWManager.cw_list.pack(side='top')
-            CWManager.cw_list.bind('<Double-Button-1>',
-                                   lambda e: CWManager.load_user_crossword(
-                                       CWManager.cw_list.get(CWManager.cw_list.curselection())))
+            CWManager.cw_list.bind('<Double-Button-1>', CWManager.play_crossword)
+            # EDIT CROSSWORD
+            tkinter.Button(CWManager.window, text='Upraviť vybranú osemsmerovku',
+                           command=CWManager.edit_crossword).pack(side='top')
             # DELETE CROSSWORD
             tkinter.Button(CWManager.window, text='Zmazať vybranú osemsmerovku',
                            command=CWManager.delete_crossword).pack(side='top')
@@ -44,6 +46,7 @@ class CWManager:
             tkinter.Button(CWManager.window, text='Vytvoriť novú osemsmerovku',
                            command=CWManager.create_crossword).pack(
                 side='top')
+            CWManager.game = game
         CWManager.load_user_crosswords()
 
     @staticmethod
@@ -58,7 +61,7 @@ class CWManager:
                 with open('assets/crosswords/user-' + name + '.cw', 'w', encoding='UTF-8') as cwfile:
                     cwfile.write(width.replace('-', '') + ' ' + height.replace('-', ''))
                 CWManager.load_user_crosswords()
-                CWManager.load_user_crossword(name)
+                CWManager.edit_crossword(name)
             except ValueError:
                 messagebox.showerror('Nová osemsmerovka', '\'' + CWManager.w_entry.get() + '\' nie je platné číslo',
                                      parent=CWManager.window)
@@ -84,8 +87,21 @@ class CWManager:
                 CWManager.cw_list.insert('end', file.replace('.cw', '').replace('user-', ''))
 
     @staticmethod
-    def load_user_crossword(name):
-        Generator('user-' + name)
+    def edit_crossword(name=None):
+        try:
+            if name is None:
+                name = CWManager.cw_list.get(CWManager.cw_list.curselection())
+            Generator('user-' + name)
+        except:
+            pass
+
+    @staticmethod
+    def play_crossword(e):
+        try:
+            name = CWManager.cw_list.get(CWManager.cw_list.curselection())
+            CWManager.game.load_crossword('user-' + name)
+        except:
+            pass
 
     @staticmethod
     def close():
